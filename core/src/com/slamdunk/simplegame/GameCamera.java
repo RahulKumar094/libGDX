@@ -15,6 +15,7 @@ public class GameCamera
 {
     public OrthographicCamera cam;
     public StretchViewport viewport;
+    public static GameCamera Instance;
 
     public GameCamera(int width, int height)
     {
@@ -23,6 +24,9 @@ public class GameCamera
         viewport.apply();
         cam.position.set(width/2, height/2, 0);
         cam.update();
+
+        if(Instance == null)
+            Instance = this;
     }
 
     public Matrix4 combined()

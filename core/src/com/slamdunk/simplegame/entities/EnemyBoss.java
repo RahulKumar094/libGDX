@@ -1,14 +1,20 @@
 package com.slamdunk.simplegame.entities;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Vector2;
 import com.slamdunk.simplegame.SpaceGame;
 import com.slamdunk.simplegame.screen.GameScreen;
-import com.slamdunk.simplegame.tools.BoxCollider;
 
 public class EnemyBoss extends Enemy
 {
+	private static int SHIELD_HEALTH = 200;
+	private static final float TIME_TO_SHIELD = 5;
 	private float speedX = 50f;
 	private boolean moveRight = false;
+	private float lifeTime = 0;
+	private Shield shield;
+	private Vector2 center;
+
 	public EnemyBoss(int x)
 	{
 		super(x);
@@ -21,7 +27,7 @@ public class EnemyBoss extends Enemy
 	}
 	
 	@Override
-	protected void move(float delta)
+	protected void move(Batch batch,float delta)
 	{
 		if(y > SpaceGame.HEIGHT - 10)
 			y -= speedMultiplier * speed * delta;
@@ -35,6 +41,36 @@ public class EnemyBoss extends Enemy
 			x += speedMultiplier * speedX * delta;
 		else
 			x -= speedMultiplier * speedX * delta;
+
+		//Shield
+		lifeTime += delta;
+		if(lifeTime >= TIME_TO_SHIELD)
+		{
+			createShield();
+			lifeTime = -120;
+		}
+
+		center = new Vector2(x - SHIP_PIXEL_WIDTH * scale/2, y - SHIP_PIXEL_HEIGHT * scale/2);
+
+		if(shield != null)
+		{
+			if(!shield.destroy)
+			{
+				shield.renderAndUpdate(batch, center);
+			}
+			else
+				shield = null;
+		}
+	}
+
+	private void createShield()
+	{
+		if(shield == null)
+		{
+			shield = new Shield(center, 80, SHIELD_HEALTH,false);
+		}
+		else
+			shield.renewShield();
 	}
 	
 	@Override
@@ -47,6 +83,11 @@ public class EnemyBoss extends Enemy
 		GameScreen.instance.enemyBullets.add(b1);
 		GameScreen.instance.enemyBullets.add(b2);
 		GameScreen.instance.enemyBullets.add(b3);
+	}
+
+	public Shield getShield()
+	{
+		return shield;
 	}
 	
 }

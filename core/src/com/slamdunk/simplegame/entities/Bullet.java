@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.slamdunk.simplegame.SpaceGame;
-import com.slamdunk.simplegame.tools.BoxCollider;
+import com.slamdunk.simplegame.Utilities.BoxCollider;
 
 public class Bullet 
 {
